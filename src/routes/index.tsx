@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import africaMap from "@/assets/africa-map.jpg";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { AfricaMap } from "@/components/atlas/AfricaMap";
+import { Orchestrator } from "@/components/atlas/Orchestrator";
+import { RepoGrid } from "@/components/atlas/RepoGrid";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -13,6 +15,7 @@ function Index() {
         <Hero />
         <InfraStrip />
         <Dashboard />
+        <OrchestratorSection />
         <Pillars />
         <Ecosystem />
         <Footer />
@@ -26,16 +29,17 @@ function Nav() {
     <nav className="fixed top-0 w-full z-50 border-b border-border bg-background/70 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <span className="font-medium tracking-tight text-sm uppercase">Atlas Sanctum</span>
+          <Link to="/" className="font-medium tracking-tight text-sm uppercase">Atlas Sanctum</Link>
           <div className="hidden md:flex gap-6">
             <a href="#infrastructure" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Infrastructure</a>
+            <a href="#orchestrator" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Orchestrator</a>
             <a href="#ecosystem" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Ecosystem</a>
-            <a href="#research" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Research</a>
+            <Link to="/research" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Research</Link>
           </div>
         </div>
-        <button className="bg-foreground text-background text-sm font-medium py-1.5 px-4 rounded-full ring-1 ring-foreground hover:bg-transparent hover:text-foreground transition-all">
-          Join Initiative
-        </button>
+        <Link to="/research" className="bg-foreground text-background text-sm font-medium py-1.5 px-4 rounded-full ring-1 ring-foreground hover:bg-transparent hover:text-foreground transition-all">
+          Open Workspace
+        </Link>
       </div>
     </nav>
   );
@@ -54,15 +58,15 @@ function Hero() {
               We coordinate human-centered AI and quantum-classical compute to architect African-led systems intelligence. Setting our hearts and minds toward physical resilience.
             </p>
             <div className="flex items-center gap-4">
-              <button className="bg-accent text-accent-foreground text-sm font-medium py-2 pr-4 pl-3 rounded-md flex items-center gap-2 ring-1 ring-accent hover:brightness-110 transition-all">
+              <a href="#orchestrator" className="bg-accent text-accent-foreground text-sm font-medium py-2 pr-4 pl-3 rounded-md flex items-center gap-2 ring-1 ring-accent hover:brightness-110 transition-all">
                 <svg viewBox="0 0 16 16" fill="currentColor" className="size-4 shrink-0" aria-hidden>
                   <path d="M3 2v12l10-6L3 2z" />
                 </svg>
                 Explore Nucleus
-              </button>
-              <a href="#research" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Read the brief →
               </a>
+              <Link to="/research" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Open research workspace →
+              </Link>
             </div>
           </div>
 
@@ -155,25 +159,8 @@ function Dashboard() {
           <span className="hidden md:block text-[10px] font-mono text-muted-foreground uppercase">Live · Africa-centered view</span>
         </div>
         <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="relative aspect-[16/10] bg-surface rounded-2xl overflow-hidden ring-1 ring-border">
-              <img
-                src={africaMap}
-                alt="Africa-centered network of compute nodes"
-                width={1280}
-                height={800}
-                loading="lazy"
-                className="w-full h-full object-cover opacity-90"
-              />
-              <div className="absolute bottom-6 left-6 p-4 bg-black/50 backdrop-blur-md rounded-lg ring-1 ring-border">
-                <h4 className="text-xs font-semibold mb-2">Continental Node Activity</h4>
-                <div className="space-y-1">
-                  <Row label="Nairobi-1" value="Stable" />
-                  <Row label="Lagos-4" value="Peak Load" valueClass="text-accent" />
-                  <Row label="Cape-2" value="Nominal" />
-                </div>
-              </div>
-            </div>
+          <div className="lg:col-span-2">
+            <AfricaMap />
           </div>
           <div className="space-y-6">
             <Card title="Infrastructure Health">
@@ -202,12 +189,13 @@ function Dashboard() {
   );
 }
 
-function Row({ label, value, valueClass = "" }: { label: string; value: string; valueClass?: string }) {
+function OrchestratorSection() {
   return (
-    <div className="flex justify-between gap-8 text-[10px] font-mono">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={valueClass}>{value}</span>
-    </div>
+    <section id="orchestrator" className="py-24 px-6 border-t border-border bg-surface/20">
+      <div className="max-w-7xl mx-auto">
+        <Orchestrator />
+      </div>
+    </section>
   );
 }
 
@@ -250,7 +238,7 @@ function Pillars() {
     },
   ];
   return (
-    <section id="research" className="py-24 px-6 border-t border-border">
+    <section className="py-24 px-6 border-t border-border">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-3 gap-12">
           {items.map((it) => (
@@ -269,12 +257,6 @@ function Pillars() {
 }
 
 function Ecosystem() {
-  const repos = [
-    { name: "atlas/nucleus-core", desc: "Hybrid workload orchestrator runtime.", lang: "Rust", stars: "2.4k" },
-    { name: "atlas/regen-graph", desc: "Knowledge graph for regenerative systems.", lang: "Python", stars: "1.1k" },
-    { name: "atlas/quantum-bridge", desc: "Qiskit ↔ classical pipeline adapter.", lang: "Python", stars: "842" },
-    { name: "atlas/edge-mesh", desc: "Distributed edge node coordination.", lang: "Go", stars: "612" },
-  ];
   return (
     <section id="ecosystem" className="py-24 px-6 border-t border-border">
       <div className="max-w-7xl mx-auto">
@@ -282,26 +264,7 @@ function Ecosystem() {
           <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent">Open Source Ecosystem</span>
           <h2 className="mt-3 text-3xl md:text-4xl font-display max-w-[22ch]">A movement, not a product.</h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-px bg-border rounded-2xl overflow-hidden ring-1 ring-border">
-          {repos.map((r) => (
-            <a
-              key={r.name}
-              href="#"
-              className="block p-6 bg-surface/60 hover:bg-surface-elevated transition-colors group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-2">
-                  <div className="font-mono text-sm group-hover:text-accent transition-colors">{r.name}</div>
-                  <p className="text-sm text-muted-foreground max-w-[40ch]">{r.desc}</p>
-                </div>
-                <div className="text-right text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                  <div>{r.lang}</div>
-                  <div className="mt-1">★ {r.stars}</div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+        <RepoGrid />
       </div>
     </section>
   );
@@ -321,9 +284,9 @@ function Footer() {
             </button>
           </div>
           <div className="grid grid-cols-2 gap-x-16 gap-y-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">
+            <Link to="/research" className="hover:text-foreground">Research Lab</Link>
+            <a href="https://github.com/atlas-sanctum" target="_blank" rel="noreferrer noopener" className="hover:text-foreground">Open Repos</a>
             <a href="#" className="hover:text-foreground">Documentation</a>
-            <a href="#" className="hover:text-foreground">Open Repos</a>
-            <a href="#" className="hover:text-foreground">Research Lab</a>
             <a href="#" className="hover:text-foreground">Public Ledger</a>
           </div>
         </div>
